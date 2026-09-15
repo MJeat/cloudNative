@@ -4,6 +4,11 @@ const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 
+const {
+    authenticateToken,
+    authorizeRole
+} = require("./middleware/authMiddleware");
+
 const app = express();
 
 app.use(cors());
@@ -20,7 +25,12 @@ const forwardRequest = async (req, res, serviceUrl) => {
             method: req.method,
             url: url,
             data: req.body,
-            params: req.query
+            params: req.query,
+            headers: {
+                "x-user-id": req.user?.userId,
+                "x-user-email": req.user?.email,
+                "x-user-role": req.user?.role
+            }
         });
 
         res.status(response.status).json(response.data);
@@ -62,29 +72,37 @@ app.use("/auth", (req, res) => {
     );
 });
 
+/*
+Admin
+*/
+app.use(
+    "/admin",
+    authenticateToken,
+    authorizeRole("admin"),
+    (req, res) => {
+        forwardRequest(
+            req,
+            res,
+            process.env.ADMIN_SERVICE_URL
+        );
+    }
+);
 
 /*
-    Admin Service
+User
 */
-app.use("/admin", (req, res) => {
-    forwardRequest(
-        req,
-        res,
-        process.env.ADMIN_SERVICE_URL
-    );
-});
-
-
-/*
-    User Service
-*/
-app.use("/user", (req, res) => {
-    forwardRequest(
-        req,
-        res,
-        process.env.USER_SERVICE_URL
-    );
-});
+app.use(
+    "/user",
+    authenticateToken,
+    authorizeRole("user"),
+    (req, res) => {
+        forwardRequest(
+            req,
+            res,
+            process.env.USER_SERVICE_URL
+        );
+    }
+);
 
 
 /*
