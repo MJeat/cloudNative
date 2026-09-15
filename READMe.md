@@ -2,7 +2,7 @@
 
 Note that the `.env` file is intentionally attached so you don't need to change anything besides the ``MONGO_URI``
 
-````markdown
+
 # Central Identity Platform
 
 A microservices-based **Central Identity and User Management Platform** built with Node.js, Express, MongoDB, JWT, and an API Gateway.
