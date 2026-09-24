@@ -70,6 +70,16 @@ All client requests should go through the **API Gateway on port 5000**.
 
 ---
 
+## Gateway Quick Dashboard
+
+The API Gateway now includes a lightweight control dashboard to make the platform more interactive:
+
+* `GET http://localhost:5000/` → Dashboard page with quick action buttons for each microservice route
+* `GET http://localhost:5000/system/status` → Advanced runtime status (uptime + service configuration checks)
+* `GET http://localhost:5000/health` → JSON health check endpoint
+
+---
+
 # Project Structure
 
 ```text
@@ -739,4 +749,3 @@ The system provides:
 * Secure password storage
 * API Gateway routing
 * MongoDB database integration
-
